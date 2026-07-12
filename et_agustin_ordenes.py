@@ -59,6 +59,18 @@ def busqueda_precio(p_min, p_max,hechizos,reservas):
             cantidad_de_hechizos_mostrados+=1
     if cantidad_de_hechizos_mostrados==0:
         print(f"No hay hechizos disponibles en el rango de precios de {p_min} - {p_max} cristales")
+def buscar_codigo(codigo,hechizos,reservas):
+    for clave,datos in hechizos.items():
+        if clave.lower()==codigo.lower():
+            print("Hechizo encontrado")
+            print(f"Nombre: {hechizos[clave][0]} | Precio actual: {reservas[clave][0]} cristales")
+            return True
+    print("Hechizo no encontrado")
+    return False
+def actualizar_precio(codigo, nuevo_precio,reservas):
+    reservas[codigo.upper()][0]=nuevo_precio
+    print("Precio actualizado")
+
 def main():
     while True:
         op_menu=leer_opcion()
@@ -72,7 +84,7 @@ def main():
                 try:
                     p_min=int(input("Ingrese su monto minimo a pagar: "))
                     if p_min>0:
-                        p_max=int(input("Ingrese su monto maximo a pagar:"))
+                        p_max=int(input("Ingrese su monto maximo a pagar: "))
                         if p_max>0 and p_max>p_min:
                             busqueda_precio(p_min,p_max,hechizos,reservas)
                             break
@@ -81,7 +93,27 @@ def main():
                 except ValueError:
                     print("Debe ingresar valores enteros")
         elif op_menu==3:
-            print()
+            while True:
+                codigo=input("Ingrese el codigo del hechizo a modificar: ")
+                validador=buscar_codigo(codigo,hechizos,reservas)
+                if validador is True:
+                    try:
+                        nuevo_precio=int(input("Ingrese el nuevo precio de este hechizo: "))
+                        if nuevo_precio>1:
+                            print("Ingrese un precio valido en cristales")
+                            actualizar_precio(codigo,nuevo_precio,reservas)
+                        pregunta=input("¿Desea actualizar otro precio (s/n)?: ")
+                        if pregunta=="s":
+                            continue
+                        break
+                    except ValueError:
+                        print("Ingrese un precio valido en cristales")
+                else:
+                    print("El codigo no existe")
+                    pregunta=input("¿Desea actualizar otro precio (s/n)?: ")
+                    if pregunta=="s":
+                        continue
+                    break
         elif op_menu==4:
             print()
         elif op_menu==5:
